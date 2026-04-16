@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="4/11/2026 8:09:43 PM"
@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Q2"
   DTS:PackageType="5"
-  DTS:VersionBuild="79"
-  DTS:VersionGUID="{8D35719C-21AF-4DB7-AC6E-947B5735EA21}">
+  DTS:VersionBuild="87"
+  DTS:VersionGUID="{A6D005D6-0C20-422B-9EE5-2AF62C8CEC37}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -38,15 +38,6 @@
       DTS:ObjectName="LastLoadDate">
       <DTS:VariableValue
         DTS:DataType="7">1/1/2000</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{6A7DBCB3-F4CF-4867-BE39-A44D66FF9788}"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="TodayDate">
-      <DTS:VariableValue
-        DTS:DataType="7">4/14/2026 9:34:00 PM</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -426,13 +417,13 @@
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Expression"
-                          name="Expression">(DT_DBDATE)@[User::TodayDate]</property>
+                          name="Expression">(DT_DBDATE)GETDATE()</property>
                         <property
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Friendly Expression"
                           expressionType="Notify"
-                          name="FriendlyExpression">(DT_DBDATE)@[User::TodayDate]</property>
+                          name="FriendlyExpression">(DT_DBDATE)GETDATE()</property>
                       </properties>
                     </outputColumn>
                     <outputColumn
@@ -537,13 +528,13 @@
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Expression"
-                          name="Expression">(DT_DBDATE)@[User::TodayDate]</property>
+                          name="Expression">(DT_DBDATE)[GETDATE]()</property>
                         <property
                           containsID="true"
                           dataType="System.String"
                           description="Derived Column Friendly Expression"
                           expressionType="Notify"
-                          name="FriendlyExpression">(DT_DBDATE)@[User::TodayDate]</property>
+                          name="FriendlyExpression">(DT_DBDATE)GETDATE()</property>
                       </properties>
                     </outputColumn>
                     <outputColumn
@@ -869,7 +860,15 @@ where [refTable].[ID] = ?</property>
                   name="SqlCommand"
                   UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">UPDATE Campaign_Q2_Target
 SET 
-    End_Date = CASE WHEN Is_Current = 'Y' THEN DATEADD(day, -1, CAST(GETDATE() AS DATE)) ELSE End_Date END,
+    End_Date = CASE 
+                  WHEN Is_Current = 'Y' THEN 
+                      CASE 
+                          WHEN DATEADD(day, -1, CAST(GETDATE() AS DATE)) &lt; Start_Date THEN Start_Date 
+                          ELSE DATEADD(day, -1, CAST(GETDATE() AS DATE)) 
+                      END
+                  ELSE End_Date 
+               END,
+               
     Is_Current = 'N',
     Current_Name = ?,
     Current_Budget = ?
@@ -1739,57 +1738,37 @@ WHERE Update_Date &gt;= CAST(? AS DATE)</property>
       <GraphLayout
         Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="112.8,41.6"
-          Id="Package\SCD Type 6\Lookup"
-          TopLeft="354.999994710088,95.4666649617091" />
-        <NodeLayout
-          Size="171.2,41.6"
-          Id="Package\SCD Type 6\OLE DB Destination"
-          TopLeft="118.333326867885,346.733331205911" />
+          Size="152,41.6"
+          Id="Package\SCD Type 6\OLE DB Source"
+          TopLeft="333.999995023012,9.46666624320886" />
         <NodeLayout
           Size="152.8,41.6"
           Id="Package\SCD Type 6\Derived Column"
           TopLeft="126.666659745905,189.799998680154" />
         <NodeLayout
-          Size="152,41.6"
-          Id="Package\SCD Type 6\OLE DB Source"
-          TopLeft="333.999995023012,9.46666624320886" />
-        <EdgeLayout
-          Id="Package\SCD Type 6.Paths[Lookup No Match Output]"
-          TopLeft="411.399994710088,137.066664961709">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="-208.333334964182,52.7333337184455"
-              Start="0,0"
-              End="-208.333334964182,45.2333337184455">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,22.3666668592227" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,22.3666668592227"
-                    Point2="0,26.3666668592227"
-                    Point3="-4,26.3666668592227" />
-                  <mssgle:LineSegment
-                    End="-204.333334964182,26.3666668592227" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-204.333334964182,26.3666668592227"
-                    Point2="-208.333334964182,26.3666668592227"
-                    Point3="-208.333334964182,30.3666668592227" />
-                  <mssgle:LineSegment
-                    End="-208.333334964182,45.2333337184455" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-159.973054200841,31.3666668592227,111.6127734375,11.609375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+          Size="167.2,41.6"
+          Id="Package\SCD Type 6\OLE DB Command"
+          TopLeft="542.42421278749,270.60605954865" />
+        <NodeLayout
+          Size="112.8,41.6"
+          Id="Package\SCD Type 6\Lookup"
+          TopLeft="354.999994710088,95.4666649617091" />
+        <NodeLayout
+          Size="180,41.6"
+          Id="Package\SCD Type 6\OLE DB Destination 1"
+          TopLeft="540.833303783504,444.13333093471" />
+        <NodeLayout
+          Size="171.2,41.6"
+          Id="Package\SCD Type 6\OLE DB Destination"
+          TopLeft="118.333326867885,346.733331205911" />
+        <NodeLayout
+          Size="161.6,41.6"
+          Id="Package\SCD Type 6\Derived Column 1"
+          TopLeft="548.148118198655,359.111108941502" />
+        <NodeLayout
+          Size="153.6,41.6"
+          Id="Package\SCD Type 6\Conditional Split"
+          TopLeft="546.666636798118,189.799998897116" />
         <NodeLayout
           Size="156,41.6"
           Id="Package\SCD Type 6\Data Conversion"
@@ -1838,10 +1817,112 @@ WHERE Update_Date &gt;= CAST(? AS DATE)</property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="153.6,41.6"
-          Id="Package\SCD Type 6\Conditional Split"
-          TopLeft="546.666636798118,189.799998897116" />
+        <EdgeLayout
+          Id="Package\SCD Type 6.Paths[Changed]"
+          TopLeft="624.745424792804,231.399998897115">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.2060606515346"
+              Start="0,0"
+              End="0,31.7060606515346">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.7060606515346" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-19.8755078125,10.0214873570173,39.751015625,11.6630859375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SCD Type 6.Paths[OLE DB Source Output]"
+          TopLeft="410.69999486655,51.0666662432089">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.3999987185001"
+              Start="0,0"
+              End="0,36.8999987185001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.8999987185001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,10.4499993592501,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SCD Type 6.Paths[OLE DB Command Output]"
+          TopLeft="627.486165493073,312.20605954865">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.9050493928519"
+              Start="0,0"
+              End="0,39.4050493928519">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.4050493928519" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\SCD Type 6.Paths[Lookup No Match Output]"
+          TopLeft="411.399994710088,137.066664961709">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-208.333334964182,52.7333337184455"
+              Start="0,0"
+              End="-208.333334964182,45.2333337184455">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.3666668592227" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.3666668592227"
+                    Point2="0,26.3666668592227"
+                    Point3="-4,26.3666668592227" />
+                  <mssgle:LineSegment
+                    End="-204.333334964182,26.3666668592227" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-204.333334964182,26.3666668592227"
+                    Point2="-208.333334964182,26.3666668592227"
+                    Point3="-208.333334964182,30.3666668592227" />
+                  <mssgle:LineSegment
+                    End="-208.333334964182,45.2333337184455" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-159.973054200841,31.3666668592227,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <EdgeLayout
           Id="Package\SCD Type 6.Paths[Lookup Match Output]"
           TopLeft="428.866661376755,137.066664961709">
@@ -1874,68 +1955,10 @@ WHERE Update_Date &gt;= CAST(? AS DATE)</property>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="49.1086009919317,26.5358510617324,96.3827734375,11.609375"
+              BoundingBox="49.1086009919315,26.5358510617324,96.3827734375,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="167.2,41.6"
-          Id="Package\SCD Type 6\OLE DB Command"
-          TopLeft="542.42421278749,270.60605954865" />
-        <EdgeLayout
-          Id="Package\SCD Type 6.Paths[Changed]"
-          TopLeft="624.745424792804,231.399998897115">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,39.2060606515346"
-              Start="0,0"
-              End="0,31.7060606515346">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,31.7060606515346" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-19.8755078125,10.0214873570173,39.751015625,11.6630859375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="161.6,41.6"
-          Id="Package\SCD Type 6\Derived Column 1"
-          TopLeft="548.148118198655,359.111108941502" />
-        <EdgeLayout
-          Id="Package\SCD Type 6.Paths[OLE DB Command Output]"
-          TopLeft="627.486165493073,312.20605954865">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,46.9050493928519"
-              Start="0,0"
-              End="0,39.4050493928519">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,39.4050493928519" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="180,41.6"
-          Id="Package\SCD Type 6\OLE DB Destination 1"
-          TopLeft="540.833303783504,444.13333093471" />
         <EdgeLayout
           Id="Package\SCD Type 6.Paths[Derived Column Output1]"
           TopLeft="629.890710991079,400.711108941502">
@@ -1956,30 +1979,6 @@ WHERE Update_Date &gt;= CAST(? AS DATE)</property>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\SCD Type 6.Paths[OLE DB Source Output]"
-          TopLeft="410.69999486655,51.0666662432089">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,44.3999987185001"
-              Start="0,0"
-              End="0,36.8999987185001">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,36.8999987185001" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-8,10.44999935925,16,16"
-              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
